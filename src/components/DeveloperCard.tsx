@@ -1,15 +1,27 @@
 'use client';
 
 import { Developer } from '@/types';
-import { Github, MapPin, Users, Star, GitFork, Building, Globe, Mail } from 'lucide-react';
+import { Github, MapPin, Users, Star, GitFork, Building, Globe, Mail, MessageSquare, Brain, Search, Sparkles } from 'lucide-react';
 
 interface DeveloperCardProps {
   developer: Developer;
   onSave?: (developer: Developer) => void;
   isSaved?: boolean;
+  showAgentActions?: boolean;
+  onGenerateEmail?: (developer: Developer) => void;
+  onAnalyzeProfile?: (developer: Developer) => void;
+  onFindSimilar?: (developer: Developer) => void;
 }
 
-export default function DeveloperCard({ developer, onSave, isSaved }: DeveloperCardProps) {
+export default function DeveloperCard({ 
+  developer, 
+  onSave, 
+  isSaved, 
+  showAgentActions = false,
+  onGenerateEmail,
+  onAnalyzeProfile,
+  onFindSimilar
+}: DeveloperCardProps) {
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 p-6 border border-gray-200">
       <div className="flex items-start space-x-4">
@@ -163,6 +175,51 @@ export default function DeveloperCard({ developer, onSave, isSaved }: DeveloperC
                   </div>
                 ))}
               </div>
+            </div>
+          )}
+
+          {/* AI Agent Actions */}
+          {showAgentActions && (
+            <div className="mt-6 pt-4 border-t border-gray-200">
+              <h4 className="text-sm font-medium text-gray-700 mb-3 flex items-center">
+                <Sparkles className="w-4 h-4 mr-2 text-purple-600" />
+                AI Agent Actions
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                {onGenerateEmail && (
+                  <button
+                    onClick={() => onGenerateEmail(developer)}
+                    className="flex items-center px-3 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg text-sm font-medium hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-sm hover:shadow-md"
+                  >
+                    <MessageSquare className="w-3 h-3 mr-1" />
+                    Generate Email
+                  </button>
+                )}
+                
+                {onAnalyzeProfile && (
+                  <button
+                    onClick={() => onAnalyzeProfile(developer)}
+                    className="flex items-center px-3 py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg text-sm font-medium hover:from-purple-600 hover:to-purple-700 transition-all duration-200 shadow-sm hover:shadow-md"
+                  >
+                    <Brain className="w-3 h-3 mr-1" />
+                    Analyze Profile
+                  </button>
+                )}
+                
+                {onFindSimilar && (
+                  <button
+                    onClick={() => onFindSimilar(developer)}
+                    className="flex items-center px-3 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg text-sm font-medium hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-sm hover:shadow-md"
+                  >
+                    <Search className="w-3 h-3 mr-1" />
+                    Find Similar
+                  </button>
+                )}
+              </div>
+              
+              <p className="text-xs text-gray-500 mt-2 italic">
+                ✨ Powered by AI agents - each button triggers a specialized AI workflow
+              </p>
             </div>
           )}
         </div>

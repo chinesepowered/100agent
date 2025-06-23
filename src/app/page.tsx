@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { CopilotKit } from '@copilotkit/react-core';
 import { CopilotSidebar } from '@copilotkit/react-ui';
 import SearchForm from '@/components/SearchForm';
 import DeveloperCard from '@/components/DeveloperCard';
+import AgentWorkflowModal from '@/components/AgentWorkflowModal';
 import { Developer, SearchQuery, SearchResult } from '@/types';
 import { Search, Users, Sparkles, Github, MessageSquare } from 'lucide-react';
 
@@ -13,6 +14,28 @@ export default function Home() {
   const [savedDevelopers, setSavedDevelopers] = useState<Developer[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'search' | 'saved'>('search');
+  const [agentModal, setAgentModal] = useState<{
+    isOpen: boolean;
+    developer: Developer | null;
+    type: 'email' | 'analyze' | 'similar';
+  }>({ isOpen: false, developer: null, type: 'email' });
+
+  // Load saved developers on mount
+  useEffect(() => {
+    const loadSavedDevelopers = async () => {
+      try {
+        const response = await fetch('/api/developers');
+        if (response.ok) {
+          const data = await response.json();
+          setSavedDevelopers(data.developers || []);
+        }
+      } catch (error) {
+        console.error('Error loading saved developers:', error);
+      }
+    };
+
+    loadSavedDevelopers();
+  }, []);
 
   const handleSearch = async (query: SearchQuery) => {
     setIsLoading(true);
@@ -39,14 +62,56 @@ export default function Home() {
     }
   };
 
-  const handleSaveDeveloper = (developer: Developer) => {
-    if (!savedDevelopers.find(d => d.githubUsername === developer.githubUsername)) {
+  const handleSaveDeveloper = async (developer: Developer) => {
+    try {
+      // Check if already saved
+      if (savedDevelopers.find(d => d.githubUsername === developer.githubUsername)) {
+        return;
+      }
+
+      // Save to backend (Appwrite or localStorage fallback)
+      const response = await fetch('/api/developers', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(developer),
+      });
+
+      if (response.ok) {
+        // Update frontend state
+        setSavedDevelopers(prev => [...prev, developer]);
+      } else {
+        console.error('Failed to save developer');
+        // Fallback to local state only
+        setSavedDevelopers(prev => [...prev, developer]);
+      }
+    } catch (error) {
+      console.error('Error saving developer:', error);
+      // Fallback to local state only
       setSavedDevelopers(prev => [...prev, developer]);
     }
   };
 
   const isDeveloperSaved = (developer: Developer) => {
     return savedDevelopers.some(d => d.githubUsername === developer.githubUsername);
+  };
+
+  // Agent workflow handlers
+  const handleGenerateEmail = (developer: Developer) => {
+    setAgentModal({ isOpen: true, developer, type: 'email' });
+  };
+
+  const handleAnalyzeProfile = (developer: Developer) => {
+    setAgentModal({ isOpen: true, developer, type: 'analyze' });
+  };
+
+  const handleFindSimilar = (developer: Developer) => {
+    setAgentModal({ isOpen: true, developer, type: 'similar' });
+  };
+
+  const closeAgentModal = () => {
+    setAgentModal({ isOpen: false, developer: null, type: 'email' });
   };
 
   return (
@@ -202,6 +267,10 @@ export default function Home() {
                         key={developer.id}
                         developer={developer}
                         isSaved={true}
+                        showAgentActions={true}
+                        onGenerateEmail={handleGenerateEmail}
+                        onAnalyzeProfile={handleAnalyzeProfile}
+                        onFindSimilar={handleFindSimilar}
                       />
                     ))}
                   </div>
@@ -238,6 +307,16 @@ export default function Home() {
             </div>
           </div>
         </CopilotSidebar>
+
+        {/* Agent Workflow Modal */}
+        {agentModal.developer && (
+          <AgentWorkflowModal
+            isOpen={agentModal.isOpen}
+            onClose={closeAgentModal}
+            developer={agentModal.developer}
+            agentType={agentModal.type}
+          />
+        )}
       </div>
     </CopilotKit>
   );
