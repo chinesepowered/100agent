@@ -64,7 +64,7 @@ export default function AgentWorkflowModal({ isOpen, onClose, developer, agentTy
       } else {
         setResult('Error: Failed to generate result. Please check your API configuration.');
       }
-    } catch (error) {
+    } catch {
       setResult('Error: Network error occurred. Please try again.');
     } finally {
       setIsGenerating(false);
