@@ -68,3 +68,37 @@ body {
 .gradient-bg-alt {
   background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
 }
+
+/* Fix CopilotKit hydration issues */
+.copilotKitMarkdownElement p {
+  display: inline !important;
+}
+
+.copilotKitCodeBlockToolbarButtons {
+  display: inline-block !important;
+  margin-left: 8px !important;
+}
+
+/* Ensure proper nesting for CopilotKit components */
+.copilotKit-sidebar .copilotKit-markdown p {
+  margin: 0;
+  padding: 0;
+}
+
+.copilotKit-sidebar .copilotKit-markdown div {
+  display: block;
+  margin: 8px 0;
+}
+
+/* Prevent invalid HTML nesting */
+.copilotKit-sidebar .copilotKit-markdown p div {
+  display: inline-block !important;
+}
+
+.copilotKit-sidebar .copilotKit-markdown code {
+  display: inline !important;
+  background: #f1f5f9;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+}

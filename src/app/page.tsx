@@ -51,14 +51,15 @@ export default function Home() {
 
   return (
     <CopilotKit runtimeUrl="/api/copilotkit">
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100" suppressHydrationWarning>
         <CopilotSidebar
-          instructions="You are a recruiting assistant helping to find and manage GitHub developers. You can search for developers, save them to the database, and generate outreach emails."
+          instructions="You are a recruiting assistant helping to find and manage GitHub developers. You can search for developers, save them to the database, and generate outreach emails. When making tool calls, be concise and avoid code blocks in responses."
           labels={{
             title: "IntelliCrawl Assistant",
             initial: "Hi! I'm your AI recruiting assistant. I can help you search for developers, manage candidates, and create outreach emails. What would you like to do?",
           }}
           defaultOpen={false}
+          clickOutsideToClose={false}
         >
           <div className="container mx-auto px-4 py-8">
             {/* Header */}
