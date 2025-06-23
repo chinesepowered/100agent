@@ -7,8 +7,9 @@ import { NextRequest } from 'next/server';
 import { TavilyService } from '@/lib/tavily';
 import { getDevelopers, saveDeveloper } from '@/lib/appwrite';
 
-const groqAdapter = new GroqAdapter({
-  model: 'meta-llama/llama-4-maverick-17b-128e-instruct',
+// Initialize Groq adapter with proper configuration
+const serviceAdapter = new GroqAdapter({
+  model: 'meta-llama/llama-4-maverick-17b-128e-instruct', // Latest Llama 4 Maverick model
 });
 
 const runtime = new CopilotRuntime({
@@ -148,11 +149,29 @@ ${company}`;
 });
 
 export const POST = async (req: NextRequest) => {
-  const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({
-    runtime,
-    serviceAdapter: groqAdapter,
-    endpoint: '/api/copilotkit',
-  });
+  try {
+    // Debug logging
+    console.log('GROQ_API_KEY configured:', !!process.env.GROQ_API_KEY);
+    console.log('API Key starts with:', process.env.GROQ_API_KEY?.substring(0, 10) + '...');
+    
+    const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({
+      runtime,
+      serviceAdapter,
+      endpoint: '/api/copilotkit',
+    });
 
-  return handleRequest(req);
+    return handleRequest(req);
+  } catch (error) {
+    console.error('CopilotKit API error:', error);
+    
+    // More detailed error for debugging
+    return new Response(
+      JSON.stringify({
+        error: 'CopilotKit API error',
+        details: error instanceof Error ? error.message : 'Unknown error',
+        hasGroqKey: !!process.env.GROQ_API_KEY,
+      }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
 };
