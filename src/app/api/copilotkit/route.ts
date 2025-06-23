@@ -8,7 +8,7 @@ import { TavilyService } from '@/lib/tavily';
 import { getDevelopers, saveDeveloper } from '@/lib/appwrite';
 
 const groqAdapter = new GroqAdapter({
-  model: 'llama3-8b-8192',
+  model: 'meta-llama/llama-4-maverick-17b-128e-instruct',
 });
 
 const runtime = new CopilotRuntime({
