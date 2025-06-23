@@ -1,0 +1,61 @@
+{
+  "name": "intellicrawl-recruiter",
+  "version": "0.1.0",
+  "description": "AI-powered GitHub developer discovery platform for the 100 Agents Hackathon",
+  "private": true,
+  "keywords": [
+    "recruitment",
+    "github",
+    "ai",
+    "tavily",
+    "appwrite",
+    "copilotkit",
+    "hackathon",
+    "developers",
+    "talent-discovery"
+  ],
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@copilotkit/react-core": "^1.9.1",
+    "@copilotkit/react-ui": "^1.9.1",
+    "@copilotkit/runtime": "^1.9.1",
+    "@types/uuid": "^10.0.0",
+    "appwrite": "^18.1.1",
+    "lucide-react": "^0.522.0",
+    "next": "15.3.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.3.4",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/intellicrawl-recruiter.git"
+  },
+  "author": "IntelliCrawl Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yourusername/intellicrawl-recruiter/issues"
+  },
+  "homepage": "https://github.com/yourusername/intellicrawl-recruiter#readme"
+}
