@@ -8,13 +8,13 @@ export async function POST(request: NextRequest) {
       developer: Developer 
     };
 
+    let result = '';
+
     if (!process.env.GROQ_API_KEY) {
       // Fallback to template-based responses for demo purposes
       result = await getFallbackResponse(type, developer);
       return NextResponse.json({ result });
     }
-
-    let result = '';
 
     switch (type) {
       case 'email':
